@@ -13,7 +13,7 @@ This tool allows you to effortlessly compare the best APYs over:
 This is from our dedicated Google Sheets template (linked below). You can directly paste the data there!
 > **Filter used**: Only stablecoins with a supply greater than $100k USD over all available blockchains in descending order.**
 > 
->*Comment*: DAI from the USDC/DAI pair on SushiSwap on the MATIC chain has the best **current** supply APR, followed by USDC.e from the USDC.e/USDT.e pair on TraderJoe (Avalanche chain).
+>*Comment*: DAI from the USDC/DAI pair on SushiSwap on the MATIC chain has the best supply APR, followed by USDC.e from the USDC.e/USDT.e pair on TraderJoe (Avalanche chain).
 >
 > ![](imgs/impermax_example_usage.png)
 
