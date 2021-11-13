@@ -1,4 +1,7 @@
+from itertools import chain
+
 from impermax.common.tests.test_common import TestScraperHelper
+from impermax.fetcher.scraper.ascraper import _ScrapeImpermax
 
 
 class TestScraper(TestScraperHelper):
@@ -17,3 +20,9 @@ class TestScraper(TestScraperHelper):
         for r in self.html_resps:
             resp_includes_lending_pool_data: bool = any('lending-pool' in lk for lk in r.html.links)
             self.assertTrue(resp_includes_lending_pool_data, f'No lending pool data for: {r.url}')
+
+    def test_7_days_average_apr_tab_was_selected_for_all_pages(self):
+        selector = _ScrapeImpermax.TabSelectors.CSS_SELECTOR_7_DAYS.value
+        all_tabs_from_all_pages = list(chain.from_iterable(r.html.find(selector) for r in self.html_resps))
+        all_text_from_all_tabs = list(tab.text for tab in all_tabs_from_all_pages)
+        self.assertEqual(all_text_from_all_tabs.count('7 days average'), len(self.html_resps))
