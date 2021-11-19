@@ -15,7 +15,7 @@ class ImpermaxToCSV(ImpermaxOutputABC):
     @property
     def file_name(self) -> str:
         current_date = datetime.now().isoformat()[:16].replace(':', '-')  # removes illegal filename chars ':'
-        return f'impermax_current_{current_date}.csv'
+        return f'impermax_7_days_{current_date}.csv'
 
     @property
     def split_pair_data(self) -> list[list[str]]:
