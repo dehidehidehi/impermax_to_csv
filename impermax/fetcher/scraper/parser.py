@@ -10,9 +10,9 @@ from impermax.fetcher.enums import ImpermaxURLS
 @dataclass
 class IMXToken:
     ticker: str
-    supply: int
+    supply: float
     supply_apr: float
-    borrowed: int
+    borrowed: float
     borrowed_apr: float
 
     def __str__(self):
@@ -67,10 +67,10 @@ class IMXChainPageParser:
         return pair
 
     @staticmethod
-    def _clean_row_strings(supply: str, supply_apr: str, borrowed: str, borrowed_apr: str) -> tuple[int, float, int, float]:
-        supply = int(supply.replace('$', '').replace(',', ''))
+    def _clean_row_strings(supply: str, supply_apr: str, borrowed: str, borrowed_apr: str) -> tuple[float, ...]:
+        supply = float(supply.replace('$', '').replace(',', ''))
         supply_apr = float(supply_apr.replace('%', '')) / 100
-        borrowed = int(borrowed.replace('$', '').replace(',', ''))
+        borrowed = float(borrowed.replace('$', '').replace(',', ''))
         borrowed_apr = float(borrowed_apr.replace('%', '')) / 100
         return supply, supply_apr, borrowed, borrowed_apr
 
