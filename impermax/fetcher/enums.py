@@ -7,6 +7,7 @@ class ImpermaxURLS(str, ExtendedEnum):
     MATIC = 'https://polygon.impermax.finance/'
     ARB = 'https://arbitrum.impermax.finance/'
     AVAX = 'https://avalanche.impermax.finance/'
+    MOONRIVER = 'https://moonriver.impermax.finance/'
 
 
 class DataProvenances(ExtendedEnum):
