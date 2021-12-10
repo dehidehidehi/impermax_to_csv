@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 class _ScrapeImpermax(DataFetcherABC):
 
+    sleep_seconds: int = 7
+
     class Periods(ExtendedEnum, IntEnum):
         AVG_7_DAYS = 1
         AVG_24_HOURS = 2
@@ -45,9 +47,8 @@ class _ScrapeImpermax(DataFetcherABC):
         logger.info(f'{url}\t\tOK')
         return resp
 
-    @staticmethod
-    async def _load_js_content(r: HTMLResponse) -> None:
-        await r.html.arender(wait=0, sleep=3, timeout=15, keep_page=True)
+    async def _load_js_content(self, r: HTMLResponse) -> None:
+        await r.html.arender(wait=0, sleep=self.sleep_seconds, timeout=15, keep_page=True)
 
     @staticmethod
     async def _click_7_days_data_tab(r: HTMLResponse) -> None:
