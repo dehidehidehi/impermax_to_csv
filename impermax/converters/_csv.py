@@ -1,10 +1,14 @@
 import csv
+import logging
 from datetime import datetime
 from itertools import chain
+from pathlib import Path
 
 from impermax.common.consts import OUTPUT_PATH
 from impermax.converters.abc import ImpermaxOutputABC
 from impermax.fetcher.scraper.parser import IMXPair
+
+logger = logging.getLogger(__name__)
 
 
 class ImpermaxToCSV(ImpermaxOutputABC):
@@ -16,6 +20,10 @@ class ImpermaxToCSV(ImpermaxOutputABC):
     def file_name(self) -> str:
         current_date = datetime.now().isoformat()[:16].replace(':', '-')  # removes illegal filename chars ':'
         return f'impermax_7_days_{current_date}.csv'
+
+    @property
+    def full_file_path(self) -> Path:
+        return OUTPUT_PATH / self.file_name
 
     @property
     def split_pair_data(self) -> list[list[str]]:
@@ -30,10 +38,16 @@ class ImpermaxToCSV(ImpermaxOutputABC):
 
     def save(self) -> None:
         self._save_as_csv()
+        self._assert_csv_exists()
 
     def _save_as_csv(self) -> None:
         self._create_output_dir()
-        with open(str(OUTPUT_PATH / self.file_name), mode='w+', encoding='UTF-8', newline='\n') as csv_file:
+        with open(str(self.full_file_path), mode='w+', encoding='UTF-8', newline='\n') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(['blockchain', 'pair', 'dex', 'ticker', 'supply', 'supply_apr', 'borrowed', 'borrowed_apr', 'leveraged_apr', 'leveraged_apr_multiplier'])
             writer.writerows(self.split_pair_data)
+
+    def _assert_csv_exists(self) -> None:
+        if not self.full_file_path.exists():
+            raise FileNotFoundError(f'CSV failed to save without raising an exception in {self.full_file_path}')
+        logger.info(f'Saved results to {self.full_file_path}')

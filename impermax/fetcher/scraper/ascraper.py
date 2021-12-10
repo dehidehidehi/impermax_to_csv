@@ -27,6 +27,7 @@ class _ScrapeImpermax(DataFetcherABC):
         return AsyncHTMLSession()
 
     def get(self, urls: list[str]):
+        logger.info('Scraping Impermax pages...')
         results = self.asession.run(lambda: self.aget_all(urls))
         return results[0]
 
@@ -35,11 +36,13 @@ class _ScrapeImpermax(DataFetcherABC):
         return tasks
 
     async def _aget_rendered(self, url: str):
+        logger.debug(f'{url}\t\tfetching...')
         resp = await self.asession.get(url)
         await self._load_js_content(resp)
         await self._click_7_days_data_tab(resp)
         updated_content = await resp.html.page.content()
         await self._update_HTMLResponse_with_updated_content(resp, updated_content)
+        logger.info(f'{url}\t\tOK')
         return resp
 
     @staticmethod

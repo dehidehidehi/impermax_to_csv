@@ -1,10 +1,12 @@
+import logging
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Union
 
 from requests_html import HTMLResponse
 
 from impermax.fetcher.enums import ImpermaxURLS
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -42,7 +44,9 @@ class IMXChainPageParser:
         return chain
 
     def parse(self) -> list[IMXPair]:
-        return [self._mk_pair(row) for row in self._pairs_text]
+        parsed_page = [self._mk_pair(row) for row in self._pairs_text]
+        logger.debug(f'{self.chain_http_resp.url}\t\tParse OK')
+        return parsed_page
 
     @cached_property
     def _pairs_text(self) -> list[str]:

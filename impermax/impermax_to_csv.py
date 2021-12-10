@@ -4,6 +4,13 @@ from impermax.fetcher.scraper.parser import IMXChainPageParser
 from impermax.fetcher.strategy import DataFetcher
 
 
+def enable_logging() -> None:
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    pyppeteer_logger = logging.getLogger('pyppeteer')
+    pyppeteer_logger.setLevel(logging.ERROR)
+
+
 def main() -> None:
     fetcher = DataFetcher(fetcher=DataProvenances.WEB_SCRAPER)
     responses = fetcher.get(ImpermaxURLS.list())
@@ -12,4 +19,5 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    enable_logging()
     main()

@@ -1,5 +1,6 @@
 from unittest import TestLoader, TextTestRunner
 
+
 def discover_and_run_tests() -> None:
     loader = TestLoader()
     tests = loader.discover('..', pattern='test_*')
