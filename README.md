@@ -51,27 +51,38 @@ Paste the data here after it's been generated (see instructions below): https://
 
 ### First time installation instructions
 ___
-Create a new folder, then cd into it with the terminal. Then copy-paste these commands.
+Create a new folder, then cd into it with the terminal.
+Then copy-paste these commands.
+
+>Note for devs: of course, run this in a venv instead.
+
 ```console
   git clone https://github.com/dehidehidehi/impermax_to_csv.git
  ```
 
 ```console
-  cd impermax
-  pip install -r requirements.txt
+  cd impermax_to_csv
+  python setup.py install
  ```
 
->Note for devs: of course, run this in a venv instead.
+### How to retrieve the data
 
-#### How to retrieve the data
-This script is the one which retrieves the data.
-___
-```console
-  cd impermax
-  python impermax_to_csv.py
+Create a new python file with the following contents, this could be on your desktop:  
+*start_impermax_to_csv.py*
+
+```commandline
+from impermax.impermax_to_csv import main, enable_logging
+
+if __name__ == '__main__':
+    enable_logging()
+    main()
 ```
-Wait for a couple seconds; a directory called "output" should have appeared with your data under the "impermax" root directory.  
-The created file is a comma-separated file which you can open in your favourite excel-like software.
+
+Finally, run the python script:
+```commandline
+python start_impermax_to_csv.py
+```
+The application should show messages and the save location of the generated CSV file.
 
 ### Forking and development
 ___

@@ -1,1 +1,7 @@
+bs4
+fake-useragent
+parse
+pyppeteer
+pyquery
+requests
 requests-html
