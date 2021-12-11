@@ -5,3 +5,5 @@ pyppeteer
 pyquery
 requests
 requests-html
+pandas
+scipy
