@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from functools import cached_property
 
+from matplotlib import pyplot
 from pandas import DataFrame
 
 from impermax.dirty_analyser.extract_data import load_all_csv
@@ -10,28 +11,29 @@ ALL_CSV_DATA = load_all_csv()
 
 
 @dataclass
-class PairDataFilter:
-    chain: str
-    pair: str
+class PoolDataFilter:
+    contract: str
 
     @cached_property
     def _pair_data(self) -> list[dict]:
-        pair_data = [n for n in ALL_CSV_DATA if n['blockchain'] == self.chain and n['pair'] == self.pair]
-        if not pair_data:
-            raise ValueError(f'is {self.pair} a valid pair? is {self.chain} a valid chain?')
-        pair_data.sort(key=lambda x: x['datetime'])
-        return pair_data
+        _pool_data = [n for n in ALL_CSV_DATA if n['contract'] == self.contract]
+        if not _pool_data:
+            raise ValueError(f'is {self.contract} a valid pool address?')
+        _pool_data.sort(key=lambda x: x['datetime'])
+        return _pool_data
 
     @cached_property
     def left(self) -> list[dict]:
-        left_ticker, _, _ = self.pair.rpartition('/')
-        left_ticker_data = [n for n in self._pair_data if n['ticker'] == left_ticker]
+        pair = self._pair_data[0]['pair']
+        left, _, right = pair.rpartition('/')
+        left_ticker_data = [n for n in self._pair_data if n['ticker'] == left]
         return left_ticker_data
 
     @cached_property
     def right(self) -> list[dict]:
-        _, _, right_ticker = self.pair.rpartition('/')
-        right_ticker_data = [n for n in self._pair_data if n['ticker'] == right_ticker]
+        pair = self._pair_data[0]['pair']
+        left, _, right = pair.rpartition('/')
+        right_ticker_data = [n for n in self._pair_data if n['ticker'] == right]
         return right_ticker_data
 
 
@@ -65,23 +67,24 @@ class NumpyAnalytics:
 
         self._df['leveraged_apr'] = self._df['leveraged_apr'].interpolate(method='bfill')
         self._df['leveraged_apr_multiplier'] = self._df['leveraged_apr_multiplier'].interpolate(method='bfill')
+        self._df['contract'] = self._df['contract'].interpolate(method='bfill')
 
         self._df = self._df.reindex(target_idx)
 
 
-def analyse_pairs(pairs: list[tuple[str, list[str]]]):
-    for blockchain, pairs in pairs:
-        for pair_ in pairs:
-            filtered_data = PairDataFilter(chain=blockchain, pair=pair_)
-            left = NumpyAnalytics(filtered_data.left).df
-            right = NumpyAnalytics(filtered_data.right).df
-            ...
+def analyse_pools(pool_addresses: list[str]):
+    for pool in pool_addresses:
+        filtered_data = PoolDataFilter(contract=pool)
+        left = NumpyAnalytics(filtered_data.left).df
+        right = NumpyAnalytics(filtered_data.right).df
+        right['supply_apr'].plot()
+        pyplot.show()
 
 
 if __name__ == '__main__':
-    pairs = [
-        (ImpermaxURLS.AVAX.name, ['USDC.e/USDT.e',]),
-        (ImpermaxURLS.MATIC.name, ['USDC/USDT',]),
+    pools = [
+        '0xcb8f6c44c85f4a55f243df1d1f339a52a452aca5',  # MATIC/WETH POLYGON
+        '0x542ccc962097b184ca12a46030d967a735342cf8',  # USDC/DAI POLYGON
     ]
-    analyse_pairs(pairs)
+    analyse_pools(pools)
     ...

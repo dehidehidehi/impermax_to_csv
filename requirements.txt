@@ -7,3 +7,5 @@ requests
 requests-html
 pandas
 scipy
+matplotlib
+pyqt5
