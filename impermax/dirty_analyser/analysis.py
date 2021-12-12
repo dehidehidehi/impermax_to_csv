@@ -16,7 +16,7 @@ class PairDataFilter:
 
     @cached_property
     def _pair_data(self) -> list[dict]:
-        pair_data = [n for n in ALL_CSV_DATA if n['pair'] == self.pair]
+        pair_data = [n for n in ALL_CSV_DATA if n['blockchain'] == self.chain and n['pair'] == self.pair]
         if not pair_data:
             raise ValueError(f'is {self.pair} a valid pair? is {self.chain} a valid chain?')
         pair_data.sort(key=lambda x: x['datetime'])
@@ -40,36 +40,48 @@ class NumpyAnalytics:
     _the_data: list[dict]
 
     def __post_init__(self):
-        self.df = DataFrame(data=self._the_data)
+        self._df = DataFrame(data=self._the_data)
+        self._df.set_index('datetime', inplace=True)
         self._interpolate_df()
-        ...
+
+    @property
+    def df(self) -> DataFrame:
+        return self._df
 
     def _interpolate_df(self) -> None:
-        self.df.set_index('datetime', inplace=True)
-        target_idx = self.df.asfreq('1D').index
-        new_idx = self.df.index.union(target_idx)
-        self.df = self.df.reindex(new_idx)
+        target_idx = self._df.asfreq('1D').index
+        self._df = self._df.reindex(self._df.index.union(target_idx))
 
-        self.df['blockchain'] = self.df['blockchain'].interpolate(method='bfill')
-        self.df['pair'] = self.df['pair'].interpolate(method='bfill')
-        self.df['dex'] = self.df['dex'].interpolate(method='bfill')
-        self.df['ticker'] = self.df['ticker'].interpolate(method='bfill')
+        self._df['blockchain'] = self._df['blockchain'].interpolate(method='bfill')
+        self._df['pair'] = self._df['pair'].interpolate(method='bfill')
+        self._df['dex'] = self._df['dex'].interpolate(method='bfill')
+        self._df['ticker'] = self._df['ticker'].interpolate(method='bfill')
 
-        self.df['supply'] = self.df['supply'].astype(float).interpolate(method='polynomial', order=2).astype(int)
+        self._df['supply'] = self._df['supply'].astype(float).interpolate(method='polynomial', order=2).astype(int)
 
-        self.df['supply_apr'] = self.df['supply_apr'].astype(float).interpolate(method='polynomial', order=2)
-        self.df['borrowed_apr'] = self.df['borrowed_apr'].astype(float).interpolate(method='polynomial', order=2)
-        self.df['borrowed'] = self.df['supply_apr'].astype(float).interpolate(method='polynomial', order=2)
+        self._df['supply_apr'] = self._df['supply_apr'].astype(float).interpolate(method='polynomial', order=2)
+        self._df['borrowed_apr'] = self._df['borrowed_apr'].astype(float).interpolate(method='polynomial', order=2)
+        self._df['borrowed'] = self._df['supply_apr'].astype(float).interpolate(method='polynomial', order=2)
 
-        self.df['leveraged_apr'] = self.df['leveraged_apr'].interpolate(method='bfill')
-        self.df['leveraged_apr_multiplier'] = self.df['leveraged_apr_multiplier'].interpolate(method='bfill')
+        self._df['leveraged_apr'] = self._df['leveraged_apr'].interpolate(method='bfill')
+        self._df['leveraged_apr_multiplier'] = self._df['leveraged_apr_multiplier'].interpolate(method='bfill')
 
-        self.df = self.df.reindex(target_idx)
+        self._df = self._df.reindex(target_idx)
+
+
+def analyse_pairs(pairs: list[tuple[str, list[str]]]):
+    for blockchain, pairs in pairs:
+        for pair_ in pairs:
+            filtered_data = PairDataFilter(chain=blockchain, pair=pair_)
+            left = NumpyAnalytics(filtered_data.left).df
+            right = NumpyAnalytics(filtered_data.right).df
+            ...
 
 
 if __name__ == '__main__':
-    filtered_data = PairDataFilter(chain=ImpermaxURLS.AVAX.name, pair='USDC.e/USDT.e')
-    usdc = filtered_data.left
-    usdt = filtered_data.right
-    usdc_analysis = NumpyAnalytics(usdc)
-    usdc_analysis.df
+    pairs = [
+        (ImpermaxURLS.AVAX.name, ['USDC.e/USDT.e',]),
+        (ImpermaxURLS.MATIC.name, ['USDC/USDT',]),
+    ]
+    analyse_pairs(pairs)
+    ...
