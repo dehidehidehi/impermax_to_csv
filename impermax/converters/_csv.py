@@ -44,7 +44,7 @@ class ImpermaxToCSV(ImpermaxOutputABC):
         self._create_output_dir()
         with open(str(self.full_file_path), mode='w+', encoding='UTF-8', newline='\n') as csv_file:
             writer = csv.writer(csv_file)
-            writer.writerow(['blockchain', 'pair', 'dex', 'ticker', 'supply', 'supply_apr', 'borrowed', 'borrowed_apr', 'leveraged_apr', 'leveraged_apr_multiplier'])
+            writer.writerow(['blockchain', 'pair', 'dex', 'ticker', 'supply', 'supply_apr', 'borrowed', 'borrowed_apr', 'contract', 'leveraged_apr', 'leveraged_apr_multiplier'])
             writer.writerows(self.split_pair_data)
 
     def _assert_csv_exists(self) -> None:
