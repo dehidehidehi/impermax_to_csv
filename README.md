@@ -70,7 +70,7 @@ Then copy-paste these commands.
 Create a new python file with the following contents, this could be on your desktop:  
 *start_impermax_to_csv.py*
 
-```commandline
+```python
 from impermax.impermax_to_csv import main, enable_logging
 
 if __name__ == '__main__':
