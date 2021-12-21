@@ -74,33 +74,34 @@ class NumpyAnalytics:
 
         self._df = self._df.reindex(target_idx)
 
+
 def is_stablecoin(side: DataFrame) -> bool:
     return any(stable in side['ticker'][0] for stable in STABLECOIN_TICKERS)
 
-def plot_pools(pool_addresses: list[str], only_stables=True, **plot_kwargs):
+
+def plot_pools(pool_addresses: list[str], only_stables=True, apr_type: str = "supply_apr", **plot_kwargs):
     for pool in pool_addresses:
         filtered_data = PoolDataFilter(contract=pool)
         left = NumpyAnalytics(filtered_data.left).df
         right = NumpyAnalytics(filtered_data.right).df
         if not only_stables or is_stablecoin(right):
             label = ', '.join([right['ticker'][0], right['pair'][0], right['dex'][0], right['blockchain'][0]])
-            right[label] = right['supply_apr']  # changing column name for plot
+            right[label] = right[apr_type]  # changing column name for plot
             right[label].plot(**plot_kwargs)
         if not only_stables or is_stablecoin(left):
             label = ', '.join([left['ticker'][0], left['pair'][0], left['dex'][0], left['blockchain'][0]])
-            left[label] = left['supply_apr']  # changing column name for plot
+            left[label] = left[apr_type]  # changing column name for plot
             left[label].plot(**plot_kwargs)
 
 
 if __name__ == '__main__':
-    common_kwargs = dict(legend=True)
-    BENQI = ["0x3e2a4dcd46e0e339aec603080d90bd939a163062"]
-    # common_kwargs = dict()
-    plot_pools(BENQI, color='black', only_stables=False, **common_kwargs)
-    # plot_pools(MoonRiverStables.list(), color='yellow', **common_kwargs)
+    apr = "borrowed_apr"
+    # apr = "supply_apr"
+    common_kwargs = dict(legend=True, apr_type=apr)
+    # plot_pools(MoonRiverStables.list(), **common_kwargs)
     # plot_pools(AvalancheStables.list(), **common_kwargs)
-    # plot_pools(MaticStables.list(), color='pink', **common_kwargs)
-    # plot_pools(ArbitrumStables.list(), color='grey', **common_kwargs)
-    # plot_pools(EthereumStables.list(), color='black', **common_kwargs)
+    # plot_pools(MaticStables.list(), **common_kwargs)
+    # plot_pools(ArbitrumStables.list(), **common_kwargs)
+    # plot_pools(EthereumStables.list(), **common_kwargs)
     pyplot.show()
     ...
