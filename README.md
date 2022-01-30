@@ -29,9 +29,9 @@ Hi! This tool should save you tons of time and hopefully even more money.
 If you want to help me you can:
 
 -  Surprise me by sending tokens either of these addresses:
-   -  ETHEREUM : 0x880E8D09740994c75a1d1c75E07dF52fb26f385c  
-   -  **MATIC : 0x880E8D09740994c75a1d1c75E07dF52fb26f385c**  
-   -  SOLANA : C9bzkzpbt5KdKbqmMq56r3rsvtbRWHK6AeWX7dinA5LL
+   -  ETHEREUM : 0xCB6c86b53DA5A1316AE6bA773A72bC4D0dB4C021  
+   -  **MATIC : 0xCB6c86b53DA5A1316AE6bA773A72bC4D0dB4C021**  
+   -  SOLANA : 3AmhtHcUHphoNVy49issnbFKyPVCSbx174VaFTCXQujs
 -  Share my dev skills with other people in the space ! I'm trying to get noticed by making crypto related tools <3
 -  Let me know on Discord (DehiDehi#8605) or Twitter (@dehikupo)!  
 
@@ -70,7 +70,7 @@ Then copy-paste these commands.
 Create a new python file with the following contents, this could be on your desktop:  
 *start_impermax_to_csv.py*
 
-```commandline
+```python
 from impermax.impermax_to_csv import main, enable_logging
 
 if __name__ == '__main__':
