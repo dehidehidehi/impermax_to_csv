@@ -66,10 +66,10 @@ class IMXChainPageParser:
         _, _, contract_address = contract_address.rpartition('/')
 
         pair, dex, leveraged_apr, leveraged_multiplier = split_row[0], split_row[1], split_row[-2], split_row[-1]
-        t1_ticker, t1_supply, t1_borrowed, t1_supply_apr, t1_borrow_apr = tuple(split_row[2:-3:2])
+        t1_ticker, t1_supply, t1_borrowed, t1_supply_apr, t1_borrow_apr, *_ = tuple(split_row[2:-3:2])
         t1_supply, t1_supply_apr, t1_borrowed, t1_borrow_apr = self._clean_row_strings(t1_supply, t1_supply_apr, t1_borrowed, t1_borrow_apr)
 
-        t2_ticker, t2_supply, t2_borrowed, t2_supply_apr, t2_borrow_apr = tuple(split_row[3:-2:2])
+        t2_ticker, t2_supply, t2_borrowed, t2_supply_apr, t2_borrow_apr, *_ = tuple(split_row[3:-2:2])
         t2_supply, t2_supply_apr, t2_borrowed, t2_borrow_apr = self._clean_row_strings(t2_supply, t2_supply_apr, t2_borrowed, t2_borrow_apr)
 
         t1 = IMXToken(contract=contract_address, ticker=t1_ticker, supply=t1_supply, supply_apr=t1_supply_apr, borrowed=t1_borrowed, borrowed_apr=t1_borrow_apr)
