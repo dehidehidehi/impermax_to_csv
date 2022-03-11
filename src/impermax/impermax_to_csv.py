@@ -1,7 +1,8 @@
-from src.impermax.converters._csv import ImpermaxToCSV
-from src.impermax.fetcher.enums import DataProvenances, ImpermaxURLS
-from src.impermax.fetcher.scraper.parser import IMXChainPageParser
-from src.impermax.fetcher.strategy import DataFetcher
+from src.impermax.common.urls_enum import ImpermaxURLS
+from src.impermax.dao.csv_dao import CsvDao
+from src.impermax.dao.dao_interface import DaoInterface
+from src.impermax.services.data_providers.data_provider_interface import DataProviderInterface
+from src.impermax.services.data_providers.web_scraper.web_scraper_provider import WebScraperProvider
 
 
 def enable_logging() -> None:
@@ -12,10 +13,10 @@ def enable_logging() -> None:
 
 
 def main() -> None:
-    fetcher = DataFetcher(fetcher=DataProvenances.WEB_SCRAPER)
-    responses = fetcher.get(ImpermaxURLS.list())
-    parsed_resps = list(IMXChainPageParser(p).parse() for p in responses)
-    ImpermaxToCSV(parsed_resps).save()
+    provider: DataProviderInterface = WebScraperProvider()
+    imx_pairs = provider.get(ImpermaxURLS.list())
+    persister: DaoInterface = CsvDao(imx_pairs)
+    persister.save()
 
 
 if __name__ == '__main__':

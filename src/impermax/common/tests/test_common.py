@@ -1,10 +1,7 @@
 import logging
 from unittest import TestCase
 
-from src.impermax.common.consts import BASE_PATH
-from src.impermax.fetcher.enums import ImpermaxURLS
-from src.impermax.fetcher.scraper.ascraper import _ScrapeImpermax
-from src.impermax.fetcher.scraper.parser import parse_impermax_chains
+from src.impermax.common.path_consts import BASE_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -13,11 +10,3 @@ class TestCommonDir(TestCase):
 
     def test_base_path_points_to_base_impermax_dir(self):
         self.assertEqual(BASE_PATH.name, 'impermax')
-
-
-class TestScraperHelper(TestCase):
-
-    urls = ImpermaxURLS.list()
-    html_resps = _ScrapeImpermax().get(urls)
-    parsed_pairs = parse_impermax_chains(html_resps)
-    logger.warning('Untested scraping parser, use with caution.')

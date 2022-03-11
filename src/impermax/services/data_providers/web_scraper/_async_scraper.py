@@ -5,13 +5,12 @@ from functools import cached_property
 
 from requests_html import AsyncHTMLSession, HTMLResponse, HTML, DEFAULT_ENCODING
 
-from src.impermax.common.extended_classes import ExtendedEnum
-from src.impermax.fetcher.abc import DataFetcherABC
+from src.impermax.common.extended_enum import ExtendedEnum
 
 logger = logging.getLogger(__name__)
 
 
-class _ScrapeImpermax(DataFetcherABC):
+class _AsyncWebScraper:
 
     sleep_seconds: int = 7
 
@@ -53,7 +52,7 @@ class _ScrapeImpermax(DataFetcherABC):
     @staticmethod
     async def _click_7_days_data_tab(r: HTMLResponse) -> None:
         """Xpath cheatsheet: https://devhints.io/xpath"""
-        selector = _ScrapeImpermax.TabSelectors.CSS_SELECTOR_7_DAYS.value
+        selector = _AsyncWebScraper.TabSelectors.CSS_SELECTOR_7_DAYS.value
         script = """
             () => {
                 const item = document.querySelector("%s");

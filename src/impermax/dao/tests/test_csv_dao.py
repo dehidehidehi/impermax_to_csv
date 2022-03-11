@@ -1,12 +1,17 @@
-from src.impermax.common.tests.test_common import TestScraperHelper
-from src.impermax.converters._csv import ImpermaxToCSV
+from unittest import TestCase
+
+from src.impermax.common.urls_enum import ImpermaxURLS
+from src.impermax.dao.csv_dao import CsvDao
+from src.impermax.services.data_providers.web_scraper.web_scraper_provider import WebScraperProvider
 
 
-class TestCSVCreation(TestScraperHelper):
+class TestCSVCreation(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.csv_converter = ImpermaxToCSV(pairs=cls.parsed_pairs)
+        cls.urls = ImpermaxURLS.list()
+        cls.parsed_pairs = WebScraperProvider().get(cls.urls)
+        cls.csv_converter = CsvDao(cls.parsed_pairs)
 
     def test_creating_does_not_raise(self):
         self.csv_converter.save()

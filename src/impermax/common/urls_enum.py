@@ -1,5 +1,4 @@
-from src.impermax.common.extended_classes import ExtendedEnum
-from src.impermax.fetcher.scraper.ascraper import _ScrapeImpermax
+from src.impermax.common.extended_enum import ExtendedEnum
 
 
 class ImpermaxURLS(str, ExtendedEnum):
@@ -9,7 +8,3 @@ class ImpermaxURLS(str, ExtendedEnum):
     AVAX = 'https://avalanche.impermax.finance/'
     MOONRIVER = 'https://moonriver.impermax.finance/'
     FANTOM = 'https://fantom.impermax.finance/'
-
-
-class DataProvenances(ExtendedEnum):
-    WEB_SCRAPER = _ScrapeImpermax

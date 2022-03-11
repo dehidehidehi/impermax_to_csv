@@ -4,16 +4,16 @@ from datetime import datetime
 from itertools import chain
 from pathlib import Path
 
-from src.impermax.common.consts import TARGET_CSV
-from src.impermax.converters.abc import ImpermaxOutputABC
-from src.impermax.fetcher.scraper.parser import IMXPair
+from src.impermax.common.path_consts import TARGET_CSV
+from src.impermax.dao.dao_interface import DaoInterface
+from src.impermax.services.data_providers.web_scraper._dataclasses import ImxPair
 
 logger = logging.getLogger(__name__)
 
 
-class ImpermaxToCSV(ImpermaxOutputABC):
+class CsvDao(DaoInterface):
 
-    def __init__(self, pairs: list[list[IMXPair]]):
+    def __init__(self, pairs: list[list[ImxPair]]):
         self.pairs = pairs
 
     @property

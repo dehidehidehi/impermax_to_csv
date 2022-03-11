@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from src.impermax.common.consts import TARGET_CSV
+from src.impermax.common.path_consts import TARGET_CSV
 
 
-class ImpermaxOutputABC(ABC):
+class DaoInterface(ABC):
 
     @staticmethod
     def _create_output_dir() -> None:
