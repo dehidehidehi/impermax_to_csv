@@ -1,4 +1,4 @@
-from impermax.fetcher.enums import DataProvenances
+from src.impermax.fetcher.enums import DataProvenances
 
 
 class DataFetcher:

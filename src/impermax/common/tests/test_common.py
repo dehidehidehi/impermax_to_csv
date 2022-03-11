@@ -1,10 +1,10 @@
 import logging
 from unittest import TestCase
 
-from impermax.common.consts import BASE_PATH
-from impermax.fetcher.enums import ImpermaxURLS
-from impermax.fetcher.scraper.ascraper import _ScrapeImpermax
-from impermax.fetcher.scraper.parser import parse_impermax_chains
+from src.impermax.common.consts import BASE_PATH
+from src.impermax.fetcher.enums import ImpermaxURLS
+from src.impermax.fetcher.scraper.ascraper import _ScrapeImpermax
+from src.impermax.fetcher.scraper.parser import parse_impermax_chains
 
 logger = logging.getLogger(__name__)
 

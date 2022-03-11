@@ -1,7 +1,7 @@
-from impermax.converters._csv import ImpermaxToCSV
-from impermax.fetcher.enums import DataProvenances, ImpermaxURLS
-from impermax.fetcher.scraper.parser import IMXChainPageParser
-from impermax.fetcher.strategy import DataFetcher
+from src.impermax.converters._csv import ImpermaxToCSV
+from src.impermax.fetcher.enums import DataProvenances, ImpermaxURLS
+from src.impermax.fetcher.scraper.parser import IMXChainPageParser
+from src.impermax.fetcher.strategy import DataFetcher
 
 
 def enable_logging() -> None:

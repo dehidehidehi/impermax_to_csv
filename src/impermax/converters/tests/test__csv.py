@@ -1,7 +1,5 @@
-from itertools import chain
-
-from impermax.common.tests.test_common import TestScraperHelper
-from impermax.converters._csv import ImpermaxToCSV
+from src.impermax.common.tests.test_common import TestScraperHelper
+from src.impermax.converters._csv import ImpermaxToCSV
 
 
 class TestCSVCreation(TestScraperHelper):

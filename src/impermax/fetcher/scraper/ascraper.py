@@ -5,8 +5,8 @@ from functools import cached_property
 
 from requests_html import AsyncHTMLSession, HTMLResponse, HTML, DEFAULT_ENCODING
 
-from impermax.common.extended_classes import ExtendedEnum
-from impermax.fetcher.abc import DataFetcherABC
+from src.impermax.common.extended_classes import ExtendedEnum
+from src.impermax.fetcher.abc import DataFetcherABC
 
 logger = logging.getLogger(__name__)
 

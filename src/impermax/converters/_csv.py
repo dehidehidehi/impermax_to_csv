@@ -4,9 +4,9 @@ from datetime import datetime
 from itertools import chain
 from pathlib import Path
 
-from impermax.common.consts import OUTPUT_PATH
-from impermax.converters.abc import ImpermaxOutputABC
-from impermax.fetcher.scraper.parser import IMXPair
+from src.impermax.common.consts import TARGET_CSV
+from src.impermax.converters.abc import ImpermaxOutputABC
+from src.impermax.fetcher.scraper.parser import IMXPair
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class ImpermaxToCSV(ImpermaxOutputABC):
 
     @property
     def full_file_path(self) -> Path:
-        return OUTPUT_PATH / self.file_name
+        return TARGET_CSV / self.file_name
 
     @property
     def split_pair_data(self) -> list[list[str]]:

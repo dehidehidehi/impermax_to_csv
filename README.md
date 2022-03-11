@@ -1,12 +1,12 @@
-![](imgs/impermax_title.png)
-## Effortlessly keep track of 150+ ever changing APY rates!
+![](src/ressources/imgs/impermax_title.png)
+## Effortlessly keep track of 250+ ever-changing APY rates!
 
 This project is **not affiliated with Impermax**, this is not an official release.
 ___
 ## Constantly identifying the best APYs on Impermax is a pain.
 This tool allows you to effortlessly compare the best APYs over:
-- 180+ unique tokens supply and borrow APYs.
-- 100+ pairs and their unique leveraged LP APYs.
+- 250+ unique tokens supply and borrow APYs.
+- 125+ pairs and their unique leveraged LP APYs.
 - 6 blockchains (ETH, MATIC, ARB, AVAX, MOONRIVER, FTM)
 
 ### Sample data in the /output folder
@@ -18,7 +18,7 @@ This is from our dedicated Google Sheets template (linked below). You can direct
 > 
 >*Comment*: DAI from the USDC/DAI pair on SushiSwap on the MATIC chain has the best supply APR, followed by USDC.e from the USDC.e/USDT.e pair on TraderJoe (Avalanche chain).
 >
-> ![](imgs/impermax_example_usage.png)
+> ![](src/ressources/imgs/impermax_example_usage.png)
 
 ### $$$ Attempting to guilt you into giving me money $$$
 ___
@@ -64,7 +64,7 @@ Create a new python file with the following contents, this could be on your desk
 *start_impermax_to_csv.py*
 
 ```python
-from impermax.impermax_to_csv import main, enable_logging
+from src.impermax.impermax_to_csv import main, enable_logging
 
 if __name__ == '__main__':
     enable_logging()
@@ -75,7 +75,7 @@ Finally, run the python script:
 ```commandline
 python start_impermax_to_csv.py
 ```
-The application should show messages and the save location of the generated CSV file.
+The application should show messages, and the save location of the generated CSV file.
 
 ### Forking and development
 ___

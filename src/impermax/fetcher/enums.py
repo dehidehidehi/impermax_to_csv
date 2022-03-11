@@ -1,5 +1,5 @@
-from impermax.common.extended_classes import ExtendedEnum
-from impermax.fetcher.scraper.ascraper import _ScrapeImpermax
+from src.impermax.common.extended_classes import ExtendedEnum
+from src.impermax.fetcher.scraper.ascraper import _ScrapeImpermax
 
 
 class ImpermaxURLS(str, ExtendedEnum):

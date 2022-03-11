@@ -1,7 +1,7 @@
 import logging
 
-from impermax.common.tests.test_common import TestScraperHelper
-from impermax.fetcher.scraper.parser import IMXPair
+from src.impermax.common.tests.test_common import TestScraperHelper
+from src.impermax.fetcher.scraper.parser import IMXPair
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 from itertools import chain
 
-from impermax.common.tests.test_common import TestScraperHelper
-from impermax.fetcher.scraper.ascraper import _ScrapeImpermax
+from src.impermax.common.tests.test_common import TestScraperHelper
+from src.impermax.fetcher.scraper.ascraper import _ScrapeImpermax
 
 
 class TestScraper(TestScraperHelper):

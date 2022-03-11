@@ -2,7 +2,7 @@ from functools import cached_property
 from itertools import chain
 from unittest import TestCase
 
-from impermax.fetcher.enums import DataProvenances, ImpermaxURLS
+from src.impermax.fetcher.enums import DataProvenances, ImpermaxURLS
 
 
 class TestDataHelper(TestCase):

@@ -4,7 +4,7 @@ from functools import cached_property
 
 from requests_html import HTMLResponse
 
-from impermax.fetcher.enums import ImpermaxURLS
+from src.impermax.fetcher.enums import ImpermaxURLS
 
 logger = logging.getLogger(__name__)
 
