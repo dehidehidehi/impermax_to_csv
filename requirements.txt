@@ -1,7 +1,7 @@
-bs4
-fake-useragent
-parse
-pyppeteer
-pyquery
-requests
-requests-html
+bs4==0.0.1
+fake-useragent==0.1.11
+parse==1.19.0
+pyppeteer==0.2.6
+pyquery==1.4.3
+requests==2.26.0
+requests-html==0.10.0
