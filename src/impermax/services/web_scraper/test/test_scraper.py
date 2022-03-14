@@ -1,15 +1,15 @@
 import logging
 from itertools import chain
 
-from src.impermax.services.data_providers.web_scraper._async_scraper import (
+from src.impermax.common.tests.test_helper import (
+    WebScraperIntegrationTestsHelper,
+)
+from src.impermax.services.web_scraper._async_scraper import (
     _AsyncWebScraper,
 )
-from src.impermax.common.tests.test_helper import (
-    TestScraperHelper,
-)
 
 
-class TestScraper(TestScraperHelper):
+class TestScraper(WebScraperIntegrationTestsHelper):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Union
 
 
 @dataclass
@@ -30,8 +31,8 @@ class ImxPair:
     dex: str
     left: IMXToken
     right: IMXToken
-    leveraged_apr: float
-    leveraged_apr_multiplier: float
+    leveraged_apr: Union[str, float]
+    leveraged_apr_multiplier: Union[str, float]
 
     def __str__(self):
         d = [self.chain, self.pair, self.dex, self.contract]

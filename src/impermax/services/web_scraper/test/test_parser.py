@@ -1,12 +1,12 @@
 import logging
 
-from src.impermax.common.tests.test_helper import TestScraperHelper
-from src.impermax.services.data_providers.web_scraper._dataclasses import ImxPair
+from src.impermax.common.tests.test_helper import WebScraperIntegrationTestsHelper
+from src.impermax.services.web_scraper._dataclasses import ImxPair
 
 logger = logging.getLogger(__name__)
 
 
-class TestScraperParser(TestScraperHelper):
+class TestScraperParser(WebScraperIntegrationTestsHelper):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

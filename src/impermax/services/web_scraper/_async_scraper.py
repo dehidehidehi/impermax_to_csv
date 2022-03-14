@@ -12,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class _AsyncWebScraper:
-
     class Periods(ExtendedEnum, IntEnum):
         AVG_7_DAYS = 1
         AVG_24_HOURS = 2
@@ -48,23 +47,26 @@ class _AsyncWebScraper:
         await self._click_7_days_data_tab(resp)
         updated_content = await resp.html.page.content()
 
-        await self._update_HTMLResponse_with_updated_content(resp, updated_content)
+        await self._update_html_response_with_updated_content(resp, updated_content)
         logger.info(f"{url}\t\tOK")
         return resp
 
     async def _wait_for_page_content_to_load(self, r: HTMLResponse) -> None:
         r.html.page: Page
         await r.html.arender(keep_page=True)
-        await r.html.page.waitForSelector(self.selector_7_days_tab, options={
-            'visible': True,
-            'timeout': self.timeout_seconds * 1000,
-        })
+        await r.html.page.waitForSelector(
+            self.selector_7_days_tab,
+            options={
+                "visible": True,
+                "timeout": self.timeout_seconds * 1000,
+            },
+        )
 
     async def _click_7_days_data_tab(self, r: HTMLResponse) -> None:
         await r.html.page.click(selector=self.selector_7_days_tab)
 
     @staticmethod
-    async def _update_HTMLResponse_with_updated_content(
+    async def _update_html_response_with_updated_content(
         html_resp: HTMLResponse, new_content_html: str
     ) -> None:
         """Inspired by the source code of the Async HTML Response arender() method."""

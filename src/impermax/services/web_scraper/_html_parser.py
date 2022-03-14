@@ -3,8 +3,8 @@ from functools import cached_property
 
 from requests_html import HTMLResponse
 
-from src.impermax.common.urls_enum import ImpermaxURLS
-from src.impermax.services.data_providers.web_scraper._dataclasses import (
+from src.impermax.common.enums.imx_urls_enum import ImpermaxURLS
+from src.impermax.services.web_scraper._dataclasses import (
     ImxPair,
     IMXToken,
 )
@@ -93,15 +93,15 @@ class _ImxPageParser:
         supply: str, supply_apr: str, borrowed: str, borrowed_apr: str
     ) -> tuple[float, ...]:
 
-        for c in {'$', ',', '-'}:
-            supply = supply.replace(c, '')
-            borrowed = borrowed.replace(c, '')
+        for c in {"$", ",", "-"}:
+            supply = supply.replace(c, "")
+            borrowed = borrowed.replace(c, "")
 
-        supply = float(supply) if supply else float('NaN')
-        borrowed = float(borrowed) if borrowed else float('NaN')
+        supply = float(supply) if supply else float("NaN")
+        borrowed = float(borrowed) if borrowed else float("NaN")
 
-        for c in {'%'}:
-            supply_apr = float(supply_apr.replace(c, '')) / 100
-            borrowed_apr = float(borrowed_apr.replace(c, '')) / 100
+        for c in {"%"}:
+            supply_apr = float(supply_apr.replace(c, "")) / 100
+            borrowed_apr = float(borrowed_apr.replace(c, "")) / 100
 
         return supply, supply_apr, borrowed, borrowed_apr

@@ -2,13 +2,13 @@ import logging
 from abc import ABC, abstractmethod
 from unittest import TestCase
 
+from src.impermax.common.enums.imx_urls_enum import ImpermaxURLS
 from src.impermax.common.tests.singleton_meta import SingletonMeta
-from src.impermax.common.urls_enum import ImpermaxURLS
 from src.impermax.impermax_to_csv import enable_logging
-from src.impermax.services.data_providers.web_scraper._async_scraper import (
+from src.impermax.services.web_scraper._async_scraper import (
     _AsyncWebScraper,
 )
-from src.impermax.services.data_providers.web_scraper._html_parser import _ImxPageParser
+from src.impermax.services.web_scraper._html_parser import _ImxPageParser
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +40,7 @@ class _SingletonTestHelper(metaclass=SingletonMeta):
         return _AsyncWebScraper().get(self.urls)
 
 
-class TestScraperHelper(ABC, TestCase):
-
+class WebScraperIntegrationTestsHelper(ABC, TestCase):
     @abstractmethod
     def __init__(self, *args, **kwargs):
         """Reminding the call to this super.__init__() will silence verbose logging modules."""

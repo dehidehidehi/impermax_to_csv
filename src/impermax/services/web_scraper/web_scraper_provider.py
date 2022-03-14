@@ -1,19 +1,16 @@
 import logging
 from typing import Any
 
-from src.impermax.services.data_providers.data_provider_interface import (
-    DataProviderInterface,
-)
-from src.impermax.services.data_providers.web_scraper._async_scraper import (
+from src.impermax.services.web_scraper._async_scraper import (
     _AsyncWebScraper,
 )
-from src.impermax.services.data_providers.web_scraper._dataclasses import ImxPair
-from src.impermax.services.data_providers.web_scraper._html_parser import _ImxPageParser
+from src.impermax.services.web_scraper._dataclasses import ImxPair
+from src.impermax.services.web_scraper._html_parser import _ImxPageParser
 
 logger = logging.getLogger(__name__)
 
 
-class WebScraperProvider(DataProviderInterface):
+class WebScraperProvider:
     def get(self, urls: list[str]) -> list[list[ImxPair]]:
         pages = self._scrape(urls)
         logger.info("Parsing Impermax pages...")

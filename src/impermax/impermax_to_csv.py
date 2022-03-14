@@ -1,12 +1,8 @@
-from src.impermax.common.urls_enum import ImpermaxURLS
-from src.impermax.dao.csv_dao import CsvDao
-from src.impermax.dao.dao_interface import DaoInterface
-from src.impermax.services.data_providers.data_provider_interface import (
-    DataProviderInterface,
-)
-from src.impermax.services.data_providers.web_scraper.web_scraper_provider import (
-    WebScraperProvider,
-)
+from src.impermax.common.enums.imx_urls_enum import ImpermaxURLS
+from src.impermax.repositories.csv.csv_repository import CsvRepository
+from src.impermax.repositories.repository_interface import RepositoryInterface
+from src.impermax.services.web_scraper._dataclasses import ImxPair
+from src.impermax.services.web_scraper.web_scraper_provider import WebScraperProvider
 
 
 def enable_logging() -> None:
@@ -19,9 +15,9 @@ def enable_logging() -> None:
 
 def main() -> None:
     provider: DataProviderInterface = WebScraperProvider()
-    imx_pairs = provider.get(ImpermaxURLS.list())
-    persister: DaoInterface = CsvDao(imx_pairs)
-    persister.save()
+    imx_pairs: list[list[ImxPair]] = provider.get(ImpermaxURLS.list())
+    persister: RepositoryInterface = CsvRepository()
+    persister.save(imx_pairs)
 
 
 if __name__ == "__main__":

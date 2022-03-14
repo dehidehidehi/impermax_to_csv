@@ -1,0 +1,14 @@
+"""
+Impermax contracts
+"""
+from src.impermax.common.extended_enum import ExtendedEnum
+
+
+class ImpermaxPairs(str, ExtendedEnum):
+    ETHEREUM_IMX_ETH_UNISWAP = "0xa00d47b4b304792eb07b09233467b690db847c91"
+    POLYGON_IMX_WETH_QUICKSWAP = "0x8ce3bf56767dd87e87487f3fae63e557b821ea32"
+    ARBITRUM_IMX_ETH_SUSHISWAP = "0xb7e5e74b52b9ada1042594cfd8abbdee506cc6c5"
+    ARBITRUM_IMX_ETH_SWAPR = "0xcc5c1540683aff992201d8922df44898e1cc9806"
+    FANTOM_IMX_FTM_SOLIDLY = "0x877a330af63094d88792b9ca28ac36c71673eb1c"
+    AVALANCHE_IMX_A_AVAX_PANGOLIN = "0xde0037afbe805c00d3cec67093a40882880779b7"
+    MOONRIVER_IMX_M_MOVR_SOLARBEAM = "0x6ed3bc66dfcc5ac05daec840a75836da935fac97"
