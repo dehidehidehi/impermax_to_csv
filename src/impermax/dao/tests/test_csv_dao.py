@@ -1,12 +1,20 @@
-from src.impermax.common.tests.test_common import TestScraperHelper
-from src.impermax.converters._csv import ImpermaxToCSV
+import logging
+
+from src.impermax.common.tests.test_helper import TestScraperHelper
+from src.impermax.dao.csv_dao import CsvDao
 
 
 class TestCSVCreation(TestScraperHelper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.csv_converter = ImpermaxToCSV(pairs=cls.parsed_pairs)
+        csv_output_logger = logging.getLogger("src.impermax.dao.csv_dao")
+        csv_output_logger.setLevel(logging.WARNING)
+
+    def setUp(self) -> None:
+        self.csv_converter = CsvDao(self.parsed_pairs)
 
     def test_creating_does_not_raise(self):
         self.csv_converter.save()
