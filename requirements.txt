@@ -1,4 +1,10 @@
+# Webscraping
 requests-html
+
+# Plotting
+matplotlib
+pandas
+scipy
 
 # Manually bumping requests-html dependencies
 # which passed CI/CD pipelines with no errors

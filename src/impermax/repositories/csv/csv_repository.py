@@ -14,12 +14,16 @@ logger = logging.getLogger(__name__)
 
 
 class CsvRepository(RepositoryInterface, _CsvRepositoryHelper):
+
+
     def __init__(self, file_name: Optional[str] = None):
         self.file_name = file_name or self.mk_file_name()
 
     @cached_property
     def all_csv_data(self) -> DataFrame:
-        return self.load_all_csvs()
+        csv_df = self.load_all_csvs()
+        csv_df['ticker'] = csv_df['ticker'].str.upper()  # required for pairs with mixed upper/lowercase like 'IMX.m'
+        return csv_df
 
     def find_all(self) -> DataFrame:
         return self.all_csv_data
@@ -28,9 +32,16 @@ class CsvRepository(RepositoryInterface, _CsvRepositoryHelper):
         ticker = ticker.upper()
         return self.all_csv_data[self.all_csv_data["ticker"].str.contains(ticker)]
 
+    def find_by_tickers(self, *tickers) -> DataFrame:
+        tickers = {t.upper() for t in tickers}
+        return self.all_csv_data[self.all_csv_data['ticker'].isin(tickers)]
+
     def find_by_ticker_strict(self, ticker: str) -> DataFrame:
         ticker = ticker.upper()
         return self.all_csv_data[self.all_csv_data["ticker"].isin({ticker})]
+
+    def find_by_tickers_strict(self, *tickers) -> DataFrame:
+        raise NotImplementedError()
 
     def find_by_contract(self, contract: str) -> DataFrame:
         contract = contract.lower()
@@ -38,7 +49,7 @@ class CsvRepository(RepositoryInterface, _CsvRepositoryHelper):
             self.all_csv_data["contract"].str.lower().isin({contract})
         ]
 
-    def find_by_contracts(self, contracts: Collection[str]) -> DataFrame:
+    def find_by_contracts(self, *contracts) -> DataFrame:
         contracts = {c.lower() for c in contracts}
         return self.all_csv_data[
             self.all_csv_data["contract"].str.lower().isin(contracts)

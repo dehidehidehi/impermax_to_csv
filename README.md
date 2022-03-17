@@ -71,6 +71,23 @@ if __name__ == '__main__':
     main()
 ```
 
+### Example usage of how to chart the data
+
+```python
+from src.impermax.repositories.csv.csv_repository import CsvRepository
+
+repo = CsvRepository()
+repo.find_all()  # returns all data
+repo.find_by_ticker("IMX")  # returns data for IMX, IMX.e, IMX.a, etc.
+repo.find_by_ticker_strict("IMX")  # returns data for IMX pairs only.
+repo.find_by_contract("0xa00d47b4b304792eb07b09233467b690db847c91")  # returns data for ETHEREUM_IMX_ETH_UNISWAP contract only.
+repo.find_by_contracts(  # returns data for specified contract addresses
+    "0xa00d47b4b304792eb07b09233467b690db847c91",  # ETHEREUM_IMX_ETH_UNISWAP
+    "0x8ce3bf56767dd87e87487f3fae63e557b821ea32",  # POLYGON_IMX_WETH_QUICKSWAP
+    ...
+)
+```
+
 Finally, run the python script:
 ```commandline
 python start_impermax_to_csv.py

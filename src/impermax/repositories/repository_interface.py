@@ -19,9 +19,21 @@ class RepositoryInterface(ABC):
         """
 
     @abstractmethod
+    def find_by_tickers(self, *tickers) -> DataFrame:
+        """
+        Finds by tickers where key IN ticker. Not strict.
+        """
+
+    @abstractmethod
     def find_by_ticker_strict(self, key: str) -> DataFrame:
         """
         Finds by ticker where key == ticker. Strict.
+        """
+
+    @abstractmethod
+    def find_by_tickers_strict(self, *tickers) -> DataFrame:
+        """
+        Find by tickers where key == ticker. Strict.
         """
 
     @abstractmethod
