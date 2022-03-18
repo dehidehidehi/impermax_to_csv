@@ -1,7 +1,7 @@
-from enum import Enum
+from src.impermax.common.extended_enum import ExtendedEnum
 
 
-class PlottableColumns(str, Enum):
+class PlottableColumns(str, ExtendedEnum):
     SUPPLY = "supply"
     SUPPLY_APR = "supply_apr"
     BORROWED = "borrowed"
