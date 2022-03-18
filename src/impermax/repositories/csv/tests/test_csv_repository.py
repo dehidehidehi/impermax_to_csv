@@ -1,12 +1,9 @@
 import logging
-from typing import Callable
 from unittest import TestCase
 
 import pandas as pd
-from pandas import DataFrame
 
 from src.impermax.common.enums.contracts.imx_enums import ImpermaxPairs
-from src.impermax.common.tests.test_helper import WebScraperIntegrationTestsHelper
 from src.impermax.repositories.csv.csv_repository import CsvRepository
 
 

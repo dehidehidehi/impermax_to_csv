@@ -14,7 +14,7 @@ def enable_logging() -> None:
 
 
 def main() -> None:
-    provider: DataProviderInterface = WebScraperProvider()
+    provider = WebScraperProvider()
     imx_pairs: list[list[ImxPair]] = provider.get(ImpermaxURLS.list())
     persister: RepositoryInterface = CsvRepository()
     persister.save(imx_pairs)

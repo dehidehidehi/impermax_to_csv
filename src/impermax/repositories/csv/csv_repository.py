@@ -1,7 +1,7 @@
 import csv
 import logging
 from functools import cached_property
-from typing import Optional, Collection
+from typing import Optional
 
 from pandas import DataFrame
 
