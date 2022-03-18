@@ -34,14 +34,15 @@ class CsvRepository(RepositoryInterface, _CsvRepositoryHelper):
 
     def find_by_tickers(self, *tickers) -> DataFrame:
         tickers = {t.upper() for t in tickers}
-        return self.all_csv_data[self.all_csv_data['ticker'].isin(tickers)]
+        return self.all_csv_data[self.all_csv_data['ticker'].str.contains('|'.join(tickers))]
 
     def find_by_ticker_strict(self, ticker: str) -> DataFrame:
         ticker = ticker.upper()
         return self.all_csv_data[self.all_csv_data["ticker"].isin({ticker})]
 
     def find_by_tickers_strict(self, *tickers) -> DataFrame:
-        raise NotImplementedError()
+        tickers = {t.upper() for t in tickers}
+        return self.all_csv_data[self.all_csv_data['ticker'].isin(tickers)]
 
     def find_by_contract(self, contract: str) -> DataFrame:
         contract = contract.lower()

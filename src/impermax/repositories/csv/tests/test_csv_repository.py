@@ -14,29 +14,18 @@ class _TestCsvRepositoryAssertions(TestCase):
     """
     Separates refactored assertions from tests.
     """
-    def assertFindByTickerReturnsLikeTickerData(self, df, *expected_tickers):
-        expected_tickers = [et.upper() for et in expected_tickers]
+    def assertFindByTickerReturnsLikeTickerData(self, df, *some_expected_tickers):
+        some_expected_tickers = [et.upper() for et in some_expected_tickers]
         response_tickers = set(df["ticker"])
         self.assertGreater(len(response_tickers), 1)
-        for r_ticker in response_tickers:
-            self.assertTrue(any(t in r_ticker for t in expected_tickers))
+        for e_ticker in some_expected_tickers:
+            self.assertTrue(any(t == e_ticker for t in response_tickers))
 
     def assertDataFrameOrderedByDatetimeAsc(self, df):
         pd.options.mode.chained_assignment = None  # default='warn'
-
-        def swap_first_and_last_values_of_series(df_, col_: str) -> None:
-            df_[col_].iloc[0], df_[col_].iloc[-1] = (
-                df_[col_].iloc[-1],
-                df_[col_].iloc[0],
-            )
-
         col = "datetime"
         should_be_ordered_asc: bool = df[col].is_monotonic
         self.assertTrue(should_be_ordered_asc)
-
-        swap_first_and_last_values_of_series(df, col)
-        should_not_be_not_ordered_asc: bool = df[col].is_monotonic
-        self.assertFalse(should_not_be_not_ordered_asc)
 
 
 class TestCsvRepository(_TestCsvRepositoryAssertions):
@@ -51,9 +40,7 @@ class TestCsvRepository(_TestCsvRepositoryAssertions):
         csv_output_logger.setLevel(logging.WARNING)
         cls.contract = ImpermaxPairs.ETHEREUM_IMX_ETH_UNISWAP.value
         cls.contract2 = ImpermaxPairs.POLYGON_IMX_WETH_QUICKSWAP.value
-
-    def setUp(self) -> None:
-        self.csv_repo = CsvRepository()
+        cls.csv_repo = CsvRepository()
 
     # def test_givenCall_whenSave_DoesNotRaise(self):
     #     self.csv_repo.save(data=self.parsed_pairs)
@@ -77,8 +64,9 @@ class TestCsvRepository(_TestCsvRepositoryAssertions):
         
     def test_givenCall_whenFindByTicker_returnsDataOnlyWithLikeTicker(self):
         resp = self.csv_repo.find_by_ticker("IMX")
+        resp_tickers = set(resp['ticker'].values)
         self.assertFalse(resp.empty)
-        self.assertTrue(all("IMX" in t for t in resp['ticker']))
+        self.assertTrue(all("IMX" in t for t in resp_tickers))
 
     def test_givenCall_whenFindByTicker_returnsDataOrderedByDatetimeAsc(self):
         resp = self.csv_repo.find_by_ticker("IMX")
@@ -92,27 +80,29 @@ class TestCsvRepository(_TestCsvRepositoryAssertions):
         resp = self.csv_repo.find_by_ticker("imx")
         self.assertFindByTickerReturnsLikeTickerData(resp, "imx".upper())
 
-    def test_givenCall_whenFindByTickers_returnsDataOnlyWithLikeTickers(self):
-        resp = self.csv_repo.find_by_tickers("IMX", "IMX.m", "IMX.a")
+    def test_givenCall_whenFindByTickers_returnsDataLikeTickers(self):
+        resp = self.csv_repo.find_by_tickers("IMX", "USDC")
+        resp_tickers = set(resp['ticker'].values)
         self.assertFalse(resp.empty)
-        self.assertTrue(all(t in {"IMX", "IMX.M", "IMX.A"} for t in resp['ticker']))
+        self.assertTrue(all(t in resp_tickers for t in {"IMX.M", "IMX.A", "USDC.E"}))
 
     def test_givenCall_whenFindByTickers_returnsDataOrderedByDatetimeAsc(self):
-        resp = self.csv_repo.find_by_tickers("IMX", "IMX.m", "IMX.a")
+        resp = self.csv_repo.find_by_tickers("IMX", "USDC")
         self.assertDataFrameOrderedByDatetimeAsc(resp)
 
     def test_givenUppercaseTickers_whenFindByTicker_returnsLikeTickersData(self):
-        resp = self.csv_repo.find_by_tickers("IMX", "IMX.M", "IMX.A")
-        self.assertFindByTickerReturnsLikeTickerData(resp, "IMX", "IMX.M", "IMX.A")
+        resp = self.csv_repo.find_by_tickers("IMX", "USDC")
+        self.assertFindByTickerReturnsLikeTickerData(resp, "IMX.M", "IMX.A", 'USDC.E')
 
     def test_givenLowerCaseTickers_whenFindByTicker_returnsLikeTickersData(self):
-        resp = self.csv_repo.find_by_tickers("imx", "imx.m", "imx.a")
-        self.assertFindByTickerReturnsLikeTickerData(resp, "imx", "imx.m", "imx.a")
+        resp = self.csv_repo.find_by_tickers("imx", "usdc")
+        self.assertFindByTickerReturnsLikeTickerData(resp, "imx.m", "usdc.e")
 
     def test_givenCall_whenFindByTickerStrict_returnsDataOnlyEqualToTicker(self):
         resp = self.csv_repo.find_by_ticker_strict("IMX")
+        resp_tickers = set(resp['ticker'].values)
         self.assertFalse(resp.empty)
-        self.assertTrue(all("IMX" == t for t in resp['ticker']))
+        self.assertTrue(all("IMX" == t for t in resp_tickers))
 
     def test_givenCall_whenFindByTickerStrict_returnsDataOrderedByDatetimeAsc(self):
         resp = self.csv_repo.find_by_ticker_strict("IMX")
@@ -126,10 +116,37 @@ class TestCsvRepository(_TestCsvRepositoryAssertions):
         resp = self.csv_repo.find_by_ticker_strict("imx")
         self.assertEqual(1, len(set(resp["ticker"])))
 
+
+    def test_givenCall_whenFindByTickersStrict_returnsDataOnlyWithOnlyTickers(self):
+        resp = self.csv_repo.find_by_tickers_strict("IMX", "USDC")
+        resp_tickers = set(resp['ticker'].values)
+        self.assertFalse(resp.empty)
+        self.assertTrue(all(t in {"IMX", "USDC"} for t in resp_tickers))
+
+    def test_givenCall_whenFindByTickersStrict_returnsDataOrderedByDatetimeAsc(self):
+        resp = self.csv_repo.find_by_tickers_strict("IMX", "USDC")
+        self.assertDataFrameOrderedByDatetimeAsc(resp)
+
+    def test_givenCall_whenFindByTickersStrict_DoesNotReturnLikeData(self):
+        resp = self.csv_repo.find_by_tickers_strict("IMX", "USDC")
+        resp_tickers = set(resp['ticker'].values)
+        self.assertNotIn("IMX.M", resp_tickers)
+        self.assertNotIn("USDC.E", resp_tickers)
+
+    def test_givenUppercaseTickers_whenFindByTickerStrict_returnsOnlyTickersData(self):
+        resp = self.csv_repo.find_by_tickers_strict("IMX", "USDC")
+        self.assertFindByTickerReturnsLikeTickerData(resp, "IMX", "USDC")
+
+    def test_givenLowerCaseTickers_whenFindByTickerStrict_returnsOnlyTickersData(self):
+        resp = self.csv_repo.find_by_tickers_strict("imx", "usdc")
+        self.assertFindByTickerReturnsLikeTickerData(resp, "imx", "usdc")
+
+
     def test_givenCall_whenFindByContract_returnsDataOnlyEqualToContract(self):
         resp = self.csv_repo.find_by_contract(self.contract)
+        resp_contracts = set(resp['contract'].values)
         self.assertFalse(resp.empty)
-        self.assertTrue(all(self.contract == c for c in resp['contract']))
+        self.assertTrue(all(self.contract == c for c in resp_contracts))
 
     def test_givenCall_whenFindByContract_returnsDataOrderedByDatetimeAsc(self):
         resp = self.csv_repo.find_by_contract(self.contract)
@@ -145,8 +162,9 @@ class TestCsvRepository(_TestCsvRepositoryAssertions):
 
     def test_givenCall_whenFindByContracts_returnsDataWithContractInContracts(self):
         resp = self.csv_repo.find_by_contracts(self.contract, self.contract2)
+        resp_contracts = set(resp['contract'].values)
         self.assertFalse(resp.empty)
-        self.assertTrue(all(c in {self.contract, self.contract2} for c in resp['contract']))
+        self.assertTrue(all(c in {self.contract, self.contract2} for c in resp_contracts))
 
     def test_givenCall_whenFindByContracts_returnsDataOrderedByDatetimeAsc(self):
         resp = self.csv_repo.find_by_contracts(self.contract, self.contract2)
