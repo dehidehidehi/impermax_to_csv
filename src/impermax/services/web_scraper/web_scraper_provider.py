@@ -19,9 +19,8 @@ class WebScraperProvider:
     @staticmethod
     def _scrape(urls: list[str]) -> list[list[Any]]:
         scraper = _AsyncWebScraper()
-        logger.info("Scraping Impermax HTML...")
-        results = scraper.asession.run(lambda: scraper.aget_all(urls))
-        return results[0]
+        results = scraper.get(urls)
+        return results
 
     @staticmethod
     def _parse(resp) -> list[ImxPair]:

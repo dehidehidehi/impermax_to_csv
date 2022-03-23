@@ -2,10 +2,14 @@ import asyncio
 import logging
 from enum import IntEnum, Enum
 from functools import cached_property
+from textwrap import dedent
+from typing import Optional
 
+import pyppeteer.errors
 from pyppeteer.page import Page
 from requests_html import AsyncHTMLSession, HTMLResponse, HTML, DEFAULT_ENCODING
 
+from src.impermax.common.enums.imx_urls_enum import ImpermaxURLS
 from src.impermax.common.extended_enum import ExtendedEnum
 
 logger = logging.getLogger(__name__)
@@ -32,18 +36,26 @@ class _AsyncWebScraper:
 
     def get(self, urls: list[str]):
         logger.info("Scraping Impermax pages...")
-        results = self.asession.run(lambda: self.aget_all(urls))
-        return results[0]
+        results = self.asession.run(lambda: self._aget_all(urls))
+        results = [r for r in results[0] if r is not None]
+        return results
 
-    async def aget_all(self, urls):
+    async def _aget_all(self, urls):
         tasks = await asyncio.gather(*(self._aget_rendered(url) for url in urls))
         return tasks
 
-    async def _aget_rendered(self, url: str):
+    async def _aget_rendered(self, url: str) -> Optional[HTMLResponse]:
         logger.debug(f"{url}\t\tfetching...")
         resp: HTMLResponse = await self.asession.get(url)
+        try:
+            await self._wait_for_page_content_to_load(resp)
+        except pyppeteer.errors.TimeoutError as e:
+            msg = dedent(f"""
+            Timeout when fetching {url}, you may want to check whether Impermax is having trouble loading pair data.
+            Error msg: {e}""")
+            logger.warning(msg)
+            return
 
-        await self._wait_for_page_content_to_load(resp)
         await self._click_7_days_data_tab(resp)
         updated_content = await resp.html.page.content()
 
@@ -76,3 +88,7 @@ class _AsyncWebScraper:
             default_encoding=DEFAULT_ENCODING,
         )
         html_resp.html.__dict__.update(html.__dict__)
+
+
+if __name__ == '__main__':
+    _AsyncWebScraper().get(ImpermaxURLS.list())
