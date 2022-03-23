@@ -91,8 +91,7 @@ class Plotter:
     def set_matplotlib_backend(backend: str) -> None:
         mpl.use(backend)
 
-    @staticmethod
-    def _interpolate(series: Series, freq: str) -> Series:
+    def _interpolate(self, series: Series, freq: str) -> Series:
         target_idx = series.asfreq(freq).index
         series = series.reindex(series.index.union(target_idx))
 
@@ -101,14 +100,7 @@ class Plotter:
         series["dex"].interpolate(method="bfill", inplace=True)
         series["ticker"].interpolate(method="bfill", inplace=True)
         series["contract"].interpolate(method="bfill", inplace=True)
-
-        series["supply"].interpolate(method="polynomial", order=2, inplace=True)
-        series["supply"].astype(int)
-        series["supply_apr"].interpolate(method="polynomial", order=2, inplace=True)
-        series["borrowed"].interpolate(method="polynomial", order=2, inplace=True)
-        series["borrowed_apr"].interpolate(method="polynomial", order=2, inplace=True)
-        series["leveraged_apr"].interpolate(method="bfill", inplace=True)
-        series["leveraged_apr_multiplier"].interpolate(method="bfill", inplace=True)
+        series[self.plotted_col].interpolate(method="polynomial", order=2, inplace=True)
 
         series.reindex(target_idx)
         return series
