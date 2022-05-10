@@ -32,7 +32,7 @@ class _AsyncWebScraper:
 
     @cached_property
     def asession(self):
-        return AsyncHTMLSession()
+        return AsyncHTMLSession(browser_args=['--no-sandbox'])
 
     def get(self, urls: list[str]):
         logger.info("Scraping Impermax pages...")
