@@ -1,0 +1,8 @@
+services:
+  impermax-webscraper:
+    container_name: impermax-webscraper
+    build:
+      dockerfile: DockerfileBuildImage
+      context: .
+    entrypoint: [ "python", "collect_data.py" ]
+
