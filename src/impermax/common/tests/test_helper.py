@@ -20,8 +20,8 @@ class _SingletonTestHelper(metaclass=SingletonMeta):
         self._increase_timeout_limit_for_tests_ci_cd()
 
         # Attributes
-        self.urls = [ImpermaxURLS.list()[0]]  # just one page, for performance
-        logger.info(f"Fetching only one page from Impermax for testing purposes.")
+        self.urls = [ImpermaxURLS.ETH.value]  # just one page, for performance
+        logger.info(f"Fetching only one page from Impermax for testing purposes: " + self.urls[0])
 
         self.html_resps = self._fetch_sample_html_responses_for_tests()
         self.parsed_pairs = self._parse_html_resps_for_tests()

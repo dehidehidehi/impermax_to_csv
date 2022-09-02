@@ -16,19 +16,26 @@ logger = logging.getLogger(__name__)
 
 
 class _AsyncWebScraper:
+
     class Periods(ExtendedEnum, IntEnum):
         AVG_7_DAYS = 1
         AVG_24_HOURS = 2
         CURRENT = 3
 
     class TabSelectors(str, Enum):
-        CSS_SELECTOR_7_DAYS = (
-            "div.home > div > div > div > div > div:nth-child(1) > span"
-        )
-        XPATH_SELECTOR_7_DAYS = "//span[contains(., '7 days average')]"
+        __DATA_TABLE_HEADER_ROW = ".pairs-table-header"
+
+        # Note:
+        # The issue with using the 7 days stat button as an indicator of a loaded page
+        # is that, in fact, it is not the last element to be loaded.
+        # We still need the selector for clicking on it via the headless browser, though.
+        __DAYS_7_STATS_BUTTON_FAST = "div.home > div > div > div > div > div:nth-child(1) > span"  # fast
+        __DAYS_7_STATS_BUTTON_SLOW = ".selector > .option:nth-child(1) > span"  # slow
+
+        STATS_7DAYS_AVERAGE = __DAYS_7_STATS_BUTTON_FAST
+        PAGE_IS_LOADED = __DATA_TABLE_HEADER_ROW
 
     timeout_seconds: int = 30
-    selector_7_days_tab = TabSelectors.CSS_SELECTOR_7_DAYS.value
 
     @cached_property
     def asession(self):
@@ -60,22 +67,24 @@ class _AsyncWebScraper:
         updated_content = await resp.html.page.content()
 
         await self._update_html_response_with_updated_content(resp, updated_content)
-        logger.info(f"{url}\t\tOK")
+        logger.info(f"""{url}       OK""")
         return resp
 
     async def _wait_for_page_content_to_load(self, r: HTMLResponse) -> None:
         r.html.page: Page
         await r.html.arender(keep_page=True)
         await r.html.page.waitForSelector(
-            self.selector_7_days_tab,
-            options={
-                "visible": True,
-                "timeout": self.timeout_seconds * 1000,
-            },
+            self.TabSelectors.PAGE_IS_LOADED.value,
+            # options={
+            #     "visible": True,
+            #     "timeout": self.timeout_seconds * 2000,
+            # },
         )
+        # artificial wait
+        await asyncio.sleep(0.25)
 
     async def _click_7_days_data_tab(self, r: HTMLResponse) -> None:
-        await r.html.page.click(selector=self.selector_7_days_tab)
+        await r.html.page.click(selector=self.TabSelectors.STATS_7DAYS_AVERAGE.value)
 
     @staticmethod
     async def _update_html_response_with_updated_content(

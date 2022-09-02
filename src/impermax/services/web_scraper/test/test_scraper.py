@@ -39,9 +39,9 @@ class TestScraper(WebScraperIntegrationTestsHelper):
             )
 
     def test_7_days_average_apr_tab_was_selected_for_all_pages(self):
-        selector = _AsyncWebScraper.TabSelectors.CSS_SELECTOR_7_DAYS.value
+        selector_7day_stats = _AsyncWebScraper.TabSelectors.STATS_7DAYS_AVERAGE
         all_tabs_from_all_pages = list(
-            chain.from_iterable(r.html.find(selector) for r in self.html_resps)
+            chain.from_iterable(r.html.find(selector_7day_stats) for r in self.html_resps)
         )
         all_text_from_all_tabs = list(tab.text for tab in all_tabs_from_all_pages)
         self.assertEqual(
